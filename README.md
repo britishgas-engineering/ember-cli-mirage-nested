@@ -2,7 +2,9 @@
 
 Define your Mirage scenario with nested syntax such as:
 
-server.create('parent').hasOne('child').hasOne('child');
+`````
+server.create('parent').hasOne('child').hasOne('grandChild');
+`````
 
 # Usage
 
