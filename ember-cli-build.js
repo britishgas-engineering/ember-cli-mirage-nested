@@ -2,20 +2,21 @@
 /* global require, module */
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
-var exclude = [],
-  options = {};
-
-if (process.env.EMBER_ENV === 'production') {
- // exclude.push(defaults.project.pkg.name + '/routes/dev-only/mirage-seed-data/**/*');
- exclude.push(defaults.project.pkg.name + '/mirage/**/*');
-}
-
-options.funnel = {
- enabled: true,
- exclude: exclude
-}
-
 module.exports = function(defaults) {
+
+  var exclude = [],
+    options = {};
+
+  if (process.env.EMBER_ENV === 'production') {
+   // exclude.push(defaults.project.pkg.name + '/routes/dev-only/mirage-seed-data/**/*');
+   exclude.push(defaults.project.pkg.name + '/mirage/**/*');
+  }
+
+  options.funnel = {
+   enabled: true,
+   exclude: exclude
+  }
+  
   var app = new EmberAddon(defaults, options);
 
   /*
