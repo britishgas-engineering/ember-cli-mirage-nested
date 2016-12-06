@@ -29,3 +29,35 @@ if error
     named="modal"
     send=(hash body=(component "mirage-seed-data/error-modal" error=error close=(action (mut error) false)))
   ]
+
+br
+br
+h3 This is how you should write your scenario in scenarios/default:
+| let parent, children, grandChildren, child;
+br
+| parent = server.create('parent');
+br
+with model.mirage.children.models as |children|
+  if children.length
+    if (eq children.length 1)
+      | child = parent.hasOne('children');
+      br
+      each children as |child index|
+        with child.children.models as |grandChildren|
+          if grandChildren.length
+            if (eq grandChildren.length 1)
+              | grandChildren = child.hasOne('children');
+            else
+              | grandChildren = child.hasMulti('children', {{grandChildren.length}});
+              br
+    else
+      | children = parent.hasMulti('children', {{children.length}});
+      br
+      each children as |child index|
+        with child.children.models as |grandChildren|
+          if grandChildren.length
+            if (eq grandChildren.length 1)
+              | grandChildren = child[{{index}}].hasOne('children');
+            else
+              | grandChildren = child[{{index}}].hasMulti('children', {{grandChildren.length}});
+              br

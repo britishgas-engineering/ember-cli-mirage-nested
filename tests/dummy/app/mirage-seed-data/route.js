@@ -10,13 +10,27 @@ export default Ember.Route.extend({
       };
     });
   },
+  _writeSentence() {
+    let parent = server.schema.parents.all().models[0],
+      children = server.schema.children.all().models,
+      grandChildren = server.schema.grandChildren.all().models,
+      sent = ["let parent, children, grandChildren;"];
+      sent.pushObject(["parent = server.create('parent');"]);
+    sent.pushObject(`children = parent.hasMulti('children', ${children.length});`);
+    sent.pushObject('children.forEach((child) => {');
+    sent.pushObject('child.');
+    sent.pushObject('});')
+    this.controller.set('sentences', sent);
+  },
   actions: {
     refresh() {
       this.store.unloadAll();
+      this._writeSentence();
       return this.refresh();
     },
     sendError(error) {
       this.controller.set('error', error);
-    }
+    },
+
   }
 });
