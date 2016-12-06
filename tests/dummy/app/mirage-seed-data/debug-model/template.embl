@@ -12,11 +12,14 @@ each flags as |flag index|
       else
         | {{flag.name}}:&nbsp;
     if flag.options.length
-      .dropdown.fixed-width
-        button.btn.btn-primary.dropdown-toggle.btn-sm type="button" data-toggle="dropdown"
+      /.dropdown.fixed-width
+      = bs-dropdown class="dropdown fixed-width"
+        = bs-dropdown-toggle class="btn btn-primary dropdown-toggle btn-sm"
+          /button.btn.btn-primary.dropdown-toggle.btn-sm type="button" data-toggle="dropdown"
           | {{current}}
           span.caret
-        ul.dropdown-menu
+        = bs-dropdown-menu
+          /ul.dropdown-menu
           each flag.options as |option|
             li
               a href="#" click="(action 'changeFlag' flag option)"

@@ -9,6 +9,10 @@ each model.ember.children as |child|
     model=child
     propertyName='children.length'
   ]
+  = mirage-seed-data/debug-ember-model-property [
+    model=child
+    propertyName='title'
+  ]
 br
 br
 br
@@ -40,7 +44,11 @@ br
 with model.mirage.children.models as |children|
   if children.length
     if (eq children.length 1)
-      | child = parent.hasOne('children');
+      | child = parent.hasOne('children', {
+      br
+      | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title: "{{children.firstObject.title}}"
+      br
+      | &nbsp;});
       br
       each children as |child index|
         with child.children.models as |grandChildren|
@@ -49,7 +57,7 @@ with model.mirage.children.models as |children|
               | grandChildren = child.hasOne('children');
             else
               | grandChildren = child.hasMulti('children', {{grandChildren.length}});
-              br
+            br
     else
       | children = parent.hasMulti('children', {{children.length}});
       br
@@ -60,4 +68,4 @@ with model.mirage.children.models as |children|
               | grandChildren = child[{{index}}].hasOne('children');
             else
               | grandChildren = child[{{index}}].hasMulti('children', {{grandChildren.length}});
-              br
+            br

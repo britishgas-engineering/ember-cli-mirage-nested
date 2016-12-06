@@ -3,5 +3,6 @@ import DS from 'ember-data';
 
 export default Model.extend({
   children: DS.hasMany('grand-child'),
-  parent: DS.belongsTo('parent')
+  parent: DS.belongsTo('parent'),
+  title: DS.attr('string')
 });
