@@ -1,0 +1,13 @@
+.row
+  .col-xs-2.col-xs-offset-2
+    = modelName
+  .col-xs-4
+    | {{propertyNameDisplay}}?
+  .col-xs-2
+    div class="text-center {{result}}"
+      = result
+unless result
+  = each reason as |lineReason|
+    .row
+      .col-xs-12.text-center.red
+        = lineReason

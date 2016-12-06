@@ -1,0 +1,10 @@
+.row.red.text-center
+  = error.message
+.row
+  .col-sm-12.text-center
+    = bg-button [
+     type="submit"
+     class="mt4"
+     theme="secondary"
+     action=(action 'close') ]
+     | Close

@@ -1,0 +1,31 @@
+h3 Those are your Ember models:
+br
+= mirage-seed-data/debug-ember-model-property [
+  model=model.ember
+  propertyName='children.length'
+]
+each model.ember.children as |child|
+  = mirage-seed-data/debug-ember-model-property [
+    model=child
+    propertyName='children.length'
+  ]
+br
+br
+br
+h3 Those are your mirage seed data, play with it:
+.row.mt10
+  .col-xs-10.col-xs-offset-1
+    | parent: 1
+    = mirage-seed-data/debug-model [
+      model=model.mirage
+      level=1
+      refreshRoute=(route-action 'refresh')
+      parentAssociationsHaveChanged=(route-action 'refresh')
+      sendError=(route-action 'sendError')
+    ]
+
+if error
+  = to-elsewhere [
+    named="modal"
+    send=(hash body=(component "mirage-seed-data/error-modal" error=error close=(action (mut error) false)))
+  ]

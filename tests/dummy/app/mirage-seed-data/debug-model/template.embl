@@ -1,0 +1,61 @@
+.fixed-width.italic
+  = model.modelName
+each flags as |flag index|
+  /if index
+    br
+    .fixed-width
+      | &nbsp;
+  = mirage-seed-data/with-item object=model key=flag.name classNames=(if index 'fixed-width' 'fixed-width') as |current|
+    span.underline
+      if flag.displayName
+        | {{flag.displayName}}:&nbsp;
+      else
+        | {{flag.name}}:&nbsp;
+    if flag.options.length
+      .dropdown.fixed-width
+        button.btn.btn-primary.dropdown-toggle.btn-sm type="button" data-toggle="dropdown"
+          | {{current}}
+          span.caret
+        ul.dropdown-menu
+          each flag.options as |option|
+            li
+              a href="#" click="(action 'changeFlag' flag option)"
+                = option
+    else
+      | {{current}}
+if parentModel
+  .fixed-width.small
+    button.btn.btn-sm.btn-secondary click="(action 'deleteRelationship' relName model parentModel)"
+      | -
+.indent
+  ul
+    each childrenAssociations as |rel|
+      li
+        .fixed-width.small.left
+          button class="btn btn-sm btn-secondary {{if (get collapsed rel.collapseName) 'collapse-show' 'collapse-hide'}}"  click="(action 'toggleCollapse' rel.collapseName)"
+            | {{if (get collapsed rel.collapseName) 'Show' 'Hide'}}
+        .fixed-width
+          = rel.name
+        .fixed-width.small
+          = rel.count
+        .fixed-width.small
+          if rel.canAdd
+            button class="btn btn-sm btn-secondary {{if rel.canAdd '' 'disabled'}}" click="(action 'addRelationship' rel.name)"
+              | +
+          else
+            | &nbsp;
+        unless (get collapsed rel.collapseName)
+          each rel.models as |model2|
+            if model2
+              .indent
+                = mirage-seed-data/debug-model [
+                  parentModel=(and rel.canDelete model)
+                  relName=rel.name
+                  model=model2
+                  level=levelNew
+                  parentAssociationsHaveChanged=(action 'associationsHaveChanged')
+                  refreshRoute=(action 'refreshRoute')
+                  sendError=(action 'sendError')
+                ]
+        else
+          br

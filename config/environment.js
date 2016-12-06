@@ -3,6 +3,6 @@
 
 module.exports = function(/* environment, appConfig */) {
   return {
-    bla: 'ble'
+    podModulePrefix: ''
   };
 };
