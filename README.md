@@ -1,5 +1,11 @@
 # Ember-cli-mirage-nested
 
+Define your Mirage scenario with nested syntax such as:
+
+server.create('parent').hasOne('child').hasOne('child');
+
+# Usage
+
 Extend your Mirage models from the bg-model in this addon, for example:
 
 `````
@@ -13,4 +19,6 @@ export default Model.extend({
 });
 `````
 
-See demo on https://britishgas-engineering.github.io/ember-cli-mirage-nested
+# Demo
+
+https://britishgas-engineering.github.io/ember-cli-mirage-nested
