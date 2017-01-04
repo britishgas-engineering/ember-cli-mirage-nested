@@ -2,5 +2,8 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-cli-mirage-nested'
+  name: 'ember-cli-mirage-nested',
+  isDevelopingAddon: function () {
+    return true;
+  }
 };

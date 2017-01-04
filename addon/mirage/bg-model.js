@@ -12,6 +12,12 @@ export default Model.extend({
     // override in model to setup when instantiated
   },
 
+  updateAttrs(hash) {
+    this.update(hash);
+    // https://github.com/samselikoff/ember-cli-mirage/issues/719
+    return this;
+  },
+
   typeOf(relName) {
     let relNames = relName.pluralize();
     return this[relNames] ? 'hasMany' : 'belongsTo';
