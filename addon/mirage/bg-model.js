@@ -305,28 +305,19 @@ export default Model.extend({
       }),
       snapshot.associations.forEach(({name, count, models}) => {
         let rels = [];
-        console.log('snapshot', name, count, models, this.modelName);
-        try {
-          switch (count) {
-            case 0:
-              this.hasNo(name);
-              break;
-            case 1:
-              rels = [this.hasOne(name)];
-              break;
-            default:
-              rels = this.hasMulti(name, count);
-          }
-        } catch(e) {
-          debugger;
+        switch (count) {
+          case 0:
+            this.hasNo(name);
+            break;
+          case 1:
+            rels = [this.hasOne(name)];
+            break;
+          default:
+            rels = this.hasMulti(name, count);
         }
-        try {
-          rels.forEach((rel, index) => {
-            rel.fromSnapshot(models[index]);
-          });
-        } catch(e) {
-          debugger;
-        }
+        rels.forEach((rel, index) => {
+          rel.fromSnapshot(models[index]);
+        });
       });
     }
   }
