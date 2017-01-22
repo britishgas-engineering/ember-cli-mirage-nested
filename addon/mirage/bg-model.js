@@ -6,6 +6,8 @@ export default Model.extend({
   // the associations in this list will be destroyed in beforeDestroy
   // TODO: define cleaner hasOne / belongsToMany relationships
   childrenAssociations: [],
+  // the associations for which you can add / remove on the GUI
+  allowChangeNbAssociations: [],
   // the flags to display on the GUI
   flags: [],
   default() {
@@ -96,7 +98,7 @@ export default Model.extend({
     relName = relName.singularize();
     let rel = this[relName];
     if (rel) {
-      rel.destroy();
+      //rel.destroy();
     }
     this[relName] = null;
     this.save();
@@ -108,7 +110,7 @@ export default Model.extend({
     let rels = this[`${relName.pluralize()}`].models;
     this[`${relName.pluralize()}`] = [];
     rels.forEach((rel) => {
-      rel.destroy();
+      //rel.destroy();
     });
     this[`${relName.pluralize()}`] = [];
     return this;
@@ -132,6 +134,11 @@ export default Model.extend({
       let hash = attrs || {};
       hash[`${inverseRelName.camelize()}Id`] = this.id;
       rels.push(server.create(modelName, hash));
+    }
+    for (let i = nb; i < initialNumber; i++) {
+      let rel = rels[i];
+      rels.removeObject(rel);
+      // rel.destroy();
     }
     this[`${relName.pluralize()}`] = rels;
     this.save();
@@ -261,9 +268,66 @@ export default Model.extend({
     let rels = this[`${relName.pluralize()}`].models;
     model = model || rels[rels.length-1];
     rels.removeObject(model);
-    model.destroy();
+    //model.destroy();
     this[`${relName.pluralize()}`] = rels;
     this.save();
     return this;
   },
+  snapshot() {
+    let hash = {};
+    hash.flags = this.flags.map((flag) => {
+      return {
+        name: flag.name,
+        value: this[flag.name]
+      };
+    });
+    hash.associations = this.childrenAssociations.map((relName) => {
+      let rel = this[relName],
+        belongsTo = !rel || !rel.models,
+        hasMany = !belongsTo;
+      return {
+        name: relName,
+        count: belongsTo ? (rel ? 1 : 0) : rel.models.length,//eslint-disable-line
+        models: belongsTo ? (rel ? [rel.snapshot()] : []) : rel.models.map((model) => {return model.snapshot();})
+      };
+    });
+    return hash;
+  },
+  fromSnapshot(snapshot) {
+    if (snapshot) {
+      snapshot.flags.forEach(({name, value}) => {
+        let flag = this.flags.findBy('name', name);
+        if (flag.method) {
+          this[flag.method](value);
+        } else {
+          this.update(name, value);
+        }
+      }),
+      snapshot.associations.forEach(({name, count, models}) => {
+        let rels = [];
+        console.log('snapshot', name, count, models, this.modelName);
+        try {
+          switch (count) {
+            case 0:
+              this.hasNo(name);
+              break;
+            case 1:
+              rels = [this.hasOne(name)];
+              break;
+            default:
+              rels = this.hasMulti(name, count);
+          }
+        } catch(e) {
+          debugger;
+        }
+        try {
+          rels.forEach((rel, index) => {
+            rel.fromSnapshot(models[index]);
+          });
+        } catch(e) {
+          debugger;
+        }
+      });
+    }
+  }
 });
