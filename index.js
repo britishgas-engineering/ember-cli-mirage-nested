@@ -14,7 +14,7 @@ module.exports = {
     }
 
     this.app = app;
-    this.addonConfig = this.app.project.config(app.env)['ember-cli-mirage-nested'] || {};
+    this.addonConfig = this.app.project.config(app.env)[this.name] || {};
     this._super.included.apply(this, arguments);
   },
   treeFor: function(name) {
