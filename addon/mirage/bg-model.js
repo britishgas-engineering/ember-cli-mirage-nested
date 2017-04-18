@@ -32,8 +32,8 @@ export default Model.extend({
       }
     });
   },
-  dontSaveAssociations: [],
-  _saveAssociations() {
+  //dontSaveAssociations: [],
+  /*_saveAssociations() {
     // prevent saving when overriden by `dontSaveAssociations`
     // for reflexive relationships bug https://github.com/samselikoff/ember-cli-mirage/issues/755
     Object.keys(this.belongsToAssociations).forEach(key => {
@@ -41,8 +41,6 @@ export default Model.extend({
         let association = this.belongsToAssociations[key];
         let parent = this[key];
         if (parent && parent.isNew()) {
-          /*console.log('_saveAssociations belongsTo', this.modelName, this.id, key, this.dontSaveAssociations);
-          console.trace();*/
           let fk = association.getForeignKey();
           parent.save();
           this.update(fk, parent.id);
@@ -52,14 +50,12 @@ export default Model.extend({
 
     Object.keys(this.hasManyAssociations).forEach(key => {
       if (!this.dontSaveAssociations.includes(key)) {
-        /*console.log('_saveAssociations hasMany', this.modelName, this.id, key, this.dontSaveAssociations);
-        console.trace();*/
         let association = this.hasManyAssociations[key];
         let children = this[key];
         children.update(association.getForeignKey(), this.id);
       }
     }, this);
-  },
+  },*/
 
   destroy() {
     this._beforeDestroy();
