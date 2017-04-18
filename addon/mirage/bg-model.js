@@ -32,30 +32,6 @@ export default Model.extend({
       }
     });
   },
-  //dontSaveAssociations: [],
-  /*_saveAssociations() {
-    // prevent saving when overriden by `dontSaveAssociations`
-    // for reflexive relationships bug https://github.com/samselikoff/ember-cli-mirage/issues/755
-    Object.keys(this.belongsToAssociations).forEach(key => {
-      if (!this.dontSaveAssociations.includes(key)) {
-        let association = this.belongsToAssociations[key];
-        let parent = this[key];
-        if (parent && parent.isNew()) {
-          let fk = association.getForeignKey();
-          parent.save();
-          this.update(fk, parent.id);
-        }
-      }
-    }, this);
-
-    Object.keys(this.hasManyAssociations).forEach(key => {
-      if (!this.dontSaveAssociations.includes(key)) {
-        let association = this.hasManyAssociations[key];
-        let children = this[key];
-        children.update(association.getForeignKey(), this.id);
-      }
-    }, this);
-  },*/
 
   destroy() {
     this._beforeDestroy();
