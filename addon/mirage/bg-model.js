@@ -144,9 +144,9 @@ export default Model.extend({
         this[`${relName.pluralize()}`] = [rel];
         this.save();
       }
-      for (let i = 1; i < length; i++) {
+      /*for (let i = 1; i < length; i++) {
         rels[i].destroy();
-      }
+      }*/
     } else {
       let assoc = this.hasManyAssociations[relName.pluralize()];
       let {modelName} = assoc;
