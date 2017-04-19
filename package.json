@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-mirage-nested",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "The default blueprint for ember-cli addons.",
   "directories": {
     "doc": "doc",
@@ -51,7 +51,7 @@
   ],
   "dependencies": {
     "ember-cli-babel": "^5.1.6",
-    "ember-cli-mirage": "^0.2.4"
+    "ember-cli-mirage": "0.3.0"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
