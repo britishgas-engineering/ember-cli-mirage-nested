@@ -140,11 +140,12 @@ export default Model.extend({
     let {length} = rels;
     if (length) {
       rel = rels[0];
-      for (let i = 1; i < length; i++) {
-        rels[i].destroy();
-      }
       if (length > 1) {
         this[`${relName.pluralize()}`] = [rel];
+        this.save();
+      }
+      for (let i = 1; i < length; i++) {
+        rels[i].destroy();
       }
     } else {
       let assoc = this.hasManyAssociations[relName.pluralize()];
@@ -154,9 +155,9 @@ export default Model.extend({
       let hash = {};
       hash[`${inverseRelName.camelize()}Id`] = this.id;
       rel = server.create(modelName, hash);
+      this[`${relName.pluralize()}`] = [rel];
+      this.save();
     }
-    this[`${relName.pluralize()}`] = [rel];
-    this.save();
     return rel;
   },
   hasOneOfOne(relName) {
@@ -292,5 +293,30 @@ export default Model.extend({
         });
       });
     }
+  },
+  //https://github.com/samselikoff/ember-cli-mirage/issues/1061
+  update(key, val) {
+    let attrs;
+    if (key == null) {
+      return this;
+    }
+
+    if (typeof key === 'object') {
+      attrs = key;
+    } else {
+      (attrs = {})[key] = val;
+    }
+
+    Object.keys(attrs).forEach(function(attr) {
+      if (!Object.keys(this.belongsToAssociations).includes(attr) &&
+        !Object.keys(this.hasManyAssociations).includes(attr)) {
+        this._definePlainAttribute(attr);
+      }
+      this[attr] = attrs[attr];
+    }, this);
+
+    this.save();
+
+    return this;
   }
 });
