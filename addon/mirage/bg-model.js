@@ -70,7 +70,12 @@ export default Model.extend({
     relName = relName.singularize();
     let rel = this[relName];
     if (rel) {
+      let assoc = this.belongsToAssociations[relName];
+      let {modelName} = assoc;
+      let inverseRelName = assoc.opts.inverse || this.modelName;
+      //rel[inverseRelName] = null;
       //rel.destroy();
+      rel._beforeDestroy();
     }
     this[relName] = null;
     this.save();
@@ -81,10 +86,17 @@ export default Model.extend({
     // TODO: create a general deleteXX method for hasMany
     let rels = this[`${relName.pluralize()}`].models;
     this[`${relName.pluralize()}`] = [];
+    let assoc = this.hasManyAssociations[relName.pluralize()];
+    let {modelName} = assoc;
+    let inverseRelName = assoc.opts.inverse || this.modelName;
     rels.forEach((rel) => {
+      //debugger;
+      rel._beforeDestroy();
+      //rel.update(`${inverseRelName}Id`, null);
       //rel.destroy();
     });
     this[`${relName.pluralize()}`] = [];
+    this.save();
     return this;
   },
 
