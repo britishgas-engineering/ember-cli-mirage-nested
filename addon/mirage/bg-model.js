@@ -1,6 +1,7 @@
 import { Model } from 'ember-cli-mirage';
 import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import assert from 'ember-cli-mirage/assert';
+import { pluralize, singularize } from 'ember-inflector';
 
 export default Model.extend({
   // the associations in this list will be destroyed in beforeDestroy
@@ -21,7 +22,7 @@ export default Model.extend({
   },
 
   typeOf(relName) {
-    let relNames = relName.pluralize();
+    let relNames = pluralize(relName);
     return this[relNames] ? 'hasMany' : 'belongsTo';
   },
 
@@ -61,13 +62,13 @@ export default Model.extend({
   },
 
   hasNo(relName) {
-    relName = relName.singularize();
+    relName = singularize(relName);
     return this.typeOf(relName) === 'hasMany' ?
     this.hasNoOfMany(relName) :
     this.hasNoOfOne(relName);
   },
   hasNoOfOne(relName) {
-    relName = relName.singularize();
+    relName = singularize(relName);
     let rel = this[relName];
     if (rel) {
       let assoc = this.belongsToAssociations[relName];
@@ -82,11 +83,12 @@ export default Model.extend({
     return this;
   },
   hasNoOfMany(relName) {
-    relName = relName.singularize();
+    relName = singularize(relName);
     // TODO: create a general deleteXX method for hasMany
-    let rels = this[`${relName.pluralize()}`].models;
-    this[`${relName.pluralize()}`] = [];
-    let assoc = this.hasManyAssociations[relName.pluralize()];
+    let relNames = pluralize(relName),
+      rels = this[relNames].models;
+    this[relNames] = [];
+    let assoc = this.hasManyAssociations[relNames];
     let {modelName} = assoc;
     let inverseRelName = assoc.opts.inverse || this.modelName;
     rels.forEach((rel) => {
@@ -95,18 +97,19 @@ export default Model.extend({
       //rel.update(`${inverseRelName}Id`, null);
       //rel.destroy();
     });
-    this[`${relName.pluralize()}`] = [];
+    this[relNames] = [];
     this.save();
     return this;
   },
 
   hasMulti(relName, nb, attrs) {
-    relName = relName.singularize();
+    relName = singularize(relName);
+    let relNames = pluralize(relName);
     nb = nb || 2;
-    let rels = this[`${relName.pluralize()}`].models,
+    let rels = this[relNames].models,
       initialNumber = rels.length;
     // let rel = this[`create${relName.capitalize()}`]();
-    let assoc = this.hasManyAssociations[relName.pluralize()];
+    let assoc = this.hasManyAssociations[relNames];
     let {modelName} = assoc;
     let inverseRelName = assoc.opts.inverse || this.modelName;
     if (attrs) {
@@ -124,13 +127,13 @@ export default Model.extend({
       rels.removeObject(rel);
       // rel.destroy();
     }
-    this[`${relName.pluralize()}`] = rels;
+    this[relNames] = rels;
     this.save();
-    return this[`${relName.pluralize()}`].models;
+    return this[relNames].models;
   },
 
   hasOne(relName, attrs) { // exactly one
-    relName = relName.singularize();
+    relName = singularize(relName);
     let model = this.typeOf(relName) === 'hasMany' ?
     this.hasOneOfMany(relName) :
     this.hasOneOfOne(relName);
@@ -141,39 +144,40 @@ export default Model.extend({
     }
   },
   hasOneOfMany(relName) {
-    relName = relName.singularize();
+    relName = singularize(relName);
+    let relNames = pluralize(relName);
     assert(
-      this.hasManyAssociations[relName.pluralize()],
-      `can not find hasManyAssociations with name ${relName.pluralize()} in ${this.modelName} model`
+      this.hasManyAssociations[relNames],
+      `can not find hasManyAssociations with name ${relNames} in ${this.modelName} model`
     );
     // TODO: create a general deleteXX method for hasMany
-    let rels = this[`${relName.pluralize()}`].models;
+    let rels = this[relNames].models;
     let rel;
     let {length} = rels;
     if (length) {
       rel = rels[0];
       if (length > 1) {
-        this[`${relName.pluralize()}`] = [rel];
+        this[relNames] = [rel];
         this.save();
       }
       /*for (let i = 1; i < length; i++) {
         rels[i].destroy();
       }*/
     } else {
-      let assoc = this.hasManyAssociations[relName.pluralize()];
+      let assoc = this.hasManyAssociations[relNames];
       let {modelName} = assoc;
       let inverseRelName = assoc.opts.inverse || this.modelName;
       // let inverseRelNameKey = assoc.getForeignKey();
       let hash = {};
       hash[`${inverseRelName.camelize()}Id`] = this.id;
       rel = server.create(modelName, hash);
-      this[`${relName.pluralize()}`] = [rel];
+      this[relNames] = [rel];
       this.save();
     }
     return rel;
   },
   hasOneOfOne(relName) {
-    relName = relName.singularize();
+    relName = singularize(relName);
     assert(
       this.belongsToAssociations[relName],
       `can not find belongsToAssociation with name ${relName} in ${this.modelName} model`
@@ -192,7 +196,7 @@ export default Model.extend({
   },
 
   addRelationship(relName, attrs) {
-    relName = relName.singularize();
+    relName = singularize(relName);
     let model = this.typeOf(relName) === 'hasMany' ?
     this.addRelationshipOfMany(relName) :
     this.addRelationshipOfOne(relName);
@@ -203,13 +207,13 @@ export default Model.extend({
     }
   },
   deleteRelationship(relName) {
-    relName = relName.singularize();
+    relName = singularize(relName);
     return this.typeOf(relName) === 'hasMany' ?
     this.deleteRelationshipOfMany(relName) :
     this.deleteRelationshipOfOne(relName);
   },
   addRelationshipOfOne(relName) {
-    relName = relName.singularize();
+    relName = singularize(relName);
     assert(
       this.belongsToAssociations[relName],
       `can not find belongsToAssociation with name ${relName} in ${this.modelName} model`
@@ -222,7 +226,7 @@ export default Model.extend({
     return this.hasOneOfOne(relName);
   },
   deleteRelationshipOfOne(relName) {
-    relName = relName.singularize();
+    relName = singularize(relName);
     assert(
       this.belongsToAssociations[relName],
       `can not find belongsToAssociation with name ${relName} in ${this.modelName} model`
@@ -235,26 +239,28 @@ export default Model.extend({
     return this.hasNoOfOne(relName);
   },
   addRelationshipOfMany(relName) {
-    relName = relName.singularize();
-    let rels = this[`${relName.pluralize()}`].models;
-    let assoc = this.hasManyAssociations[relName.pluralize()];
+    relName = singularize(relName);
+    let relNames = pluralize(relName);
+    let rels = this[relNames].models;
+    let assoc = this.hasManyAssociations[relNames];
     let {modelName} = assoc;
     let inverseRelName = assoc.opts.inverse || this.modelName;
     let hash = {};
     hash[`${inverseRelName.camelize()}Id`] = this.id;
     let model = server.create(modelName, hash);
     rels.push(model);
-    this[`${relName.pluralize()}`] = rels;
+    this[relNames] = rels;
     this.save();
     return model;
   },
   deleteRelationshipOfMany(relName, model) {
-    relName = relName.singularize();
-    let rels = this[`${relName.pluralize()}`].models;
+    relName = singularize(relName);
+    let relNames = pluralize(relName);
+    let rels = this[relNames].models;
     model = model || rels[rels.length-1];
     rels.removeObject(model);
     //model.destroy();
-    this[`${relName.pluralize()}`] = rels;
+    this[relNames] = rels;
     this.save();
     return this;
   },
