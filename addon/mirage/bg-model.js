@@ -1,7 +1,7 @@
 import { Model } from 'ember-cli-mirage';
 import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import assert from 'ember-cli-mirage/assert';
-import { pluralize, singularize } from 'ember-inflector';
+import { pluralize, singularize, camelize } from 'ember-inflector';
 
 export default Model.extend({
   // the associations in this list will be destroyed in beforeDestroy
@@ -119,7 +119,7 @@ export default Model.extend({
     }
     for (let i = initialNumber; i < nb; i++) {
       let hash = attrs || {};
-      hash[`${inverseRelName.camelize()}Id`] = this.id;
+      hash[`${camelize(inverseRelName)}Id`] = this.id;
       rels.push(server.create(modelName, hash));
     }
     for (let i = nb; i < initialNumber; i++) {
@@ -169,7 +169,7 @@ export default Model.extend({
       let inverseRelName = assoc.opts.inverse || this.modelName;
       // let inverseRelNameKey = assoc.getForeignKey();
       let hash = {};
-      hash[`${inverseRelName.camelize()}Id`] = this.id;
+      hash[`${camelize(inverseRelName)}Id`] = this.id;
       rel = server.create(modelName, hash);
       this[relNames] = [rel];
       this.save();
@@ -188,7 +188,7 @@ export default Model.extend({
       let {modelName} = assoc;
       let inverseRelName = assoc.opts.inverse || this.modelName;
       let hash = {};
-      hash[`${inverseRelName.camelize()}Id`] = this.id;
+      hash[`${camelize(inverseRelName)}Id`] = this.id;
       rel = server.create(modelName, hash);
       this.update(`${relName}Id`, rel.id);
     }
@@ -246,7 +246,7 @@ export default Model.extend({
     let {modelName} = assoc;
     let inverseRelName = assoc.opts.inverse || this.modelName;
     let hash = {};
-    hash[`${inverseRelName.camelize()}Id`] = this.id;
+    hash[`${camelize(inverseRelName)}Id`] = this.id;
     let model = server.create(modelName, hash);
     rels.push(model);
     this[relNames] = rels;
