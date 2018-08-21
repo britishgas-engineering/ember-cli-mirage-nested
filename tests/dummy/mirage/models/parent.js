@@ -1,8 +1,10 @@
-import Model from 'ember-cli-mirage-nested/mirage/bg-model';
+import BgModel from './bg-model';
 import { hasMany } from 'ember-cli-mirage';
 
-export default Model.extend({
+export default BgModel.extend({
   childrenAssociations: ['children'],
-  allowChangeNbAssociations: ['children'],
+  forGUI: {
+    allowChangeNbAssociations: ['children'],
+  },
   children: hasMany('child', {inverse: 'parent'})
 });

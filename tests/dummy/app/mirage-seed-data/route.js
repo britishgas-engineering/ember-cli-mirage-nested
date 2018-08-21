@@ -11,9 +11,7 @@ export default Ember.Route.extend({
     });
   },
   _writeSentence() {
-    let parent = server.schema.parents.all().models[0],
-      children = server.schema.children.all().models,
-      grandChildren = server.schema.grandChildren.all().models,
+    let children = server.schema.children.all().models,
       sent = ["let parent, children, grandChildren;"];
       sent.pushObject(["parent = server.create('parent');"]);
     sent.pushObject(`children = parent.hasMulti('children', ${children.length});`);

@@ -1,16 +1,17 @@
-import { Model } from 'ember-cli-mirage';
 import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import assert from 'ember-cli-mirage/assert';
-import { pluralize, singularize } from 'ember-inflector';
+import { pluralize, singularize } from 'ember-cli-mirage/utils/inflector';
 
-export default Model.extend({
+export default {
   // the associations in this list will be destroyed in beforeDestroy
   // TODO: define cleaner hasOne / belongsToMany relationships
   childrenAssociations: [],
-  // the associations for which you can add / remove on the GUI
-  allowChangeNbAssociations: [],
-  // the flags to display on the GUI
-  flags: [],
+  forGUI: {
+    // the associations for which you can add / remove on the GUI
+    allowChangeNbAssociations: [],
+    // the flags to display on the GUI
+    flags: [],
+  },
   default() {
     // override in model to setup when instantiated
   },
@@ -71,11 +72,6 @@ export default Model.extend({
     relName = singularize(relName);
     let rel = this[relName];
     if (rel) {
-      let assoc = this.belongsToAssociations[relName];
-      let {modelName} = assoc;
-      let inverseRelName = assoc.opts.inverse || this.modelName;
-      //rel[inverseRelName] = null;
-      //rel.destroy();
       rel._beforeDestroy();
     }
     this[relName] = null;
@@ -88,14 +84,8 @@ export default Model.extend({
     let relNames = pluralize(relName),
       rels = this[relNames].models;
     this[relNames] = [];
-    let assoc = this.hasManyAssociations[relNames];
-    let {modelName} = assoc;
-    let inverseRelName = assoc.opts.inverse || this.modelName;
     rels.forEach((rel) => {
-      //debugger;
       rel._beforeDestroy();
-      //rel.update(`${inverseRelName}Id`, null);
-      //rel.destroy();
     });
     this[relNames] = [];
     this.save();
@@ -266,7 +256,7 @@ export default Model.extend({
   },
   snapshot() {
     let hash = {};
-    hash.flags = this.flags.map((flag) => {
+    hash.flags = this.forGUI.flags.map((flag) => {
       return {
         name: flag.name,
         value: this[flag.name]
@@ -274,8 +264,7 @@ export default Model.extend({
     });
     hash.associations = this.childrenAssociations.map((relName) => {
       let rel = this[relName],
-        belongsTo = !rel || !rel.models,
-        hasMany = !belongsTo;
+        belongsTo = !rel || !rel.models;
       return {
         name: relName,
         count: belongsTo ? (rel ? 1 : 0) : rel.models.length,//eslint-disable-line
@@ -287,7 +276,7 @@ export default Model.extend({
   fromSnapshot(snapshot) {
     if (snapshot) {
       snapshot.flags.forEach(({name, value}) => {
-        let flag = this.flags.findBy('name', name);
+        let flag = this.forGUI.flags.findBy('name', name);
         if (flag.method) {
           this[flag.method](value);
         } else {
@@ -337,4 +326,4 @@ export default Model.extend({
 
     return this;
   }
-});
+};

@@ -23,7 +23,7 @@ export default Component.extend({
   levelNew: computed('level', function () {
     return this.get('level') + 1;
   }),
-  flags: computed.readOnly('model.flags'),
+  flags: computed.readOnly('model.forGUI.flags'),
   error: null,
   childrenAssociations: computed('model.childrenAssociations', function () {
     let model = this.get('model');
@@ -41,10 +41,10 @@ export default Component.extend({
           })*/
           collapseName: relName,
           canAdd: (hasMany || !rel) &&
-            model.allowChangeNbAssociations &&
-            model.allowChangeNbAssociations.contains(relName),
-          canDelete: model.allowChangeNbAssociations &&
-            model.allowChangeNbAssociations.contains(relName)
+            model.forGUI.allowChangeNbAssociations &&
+            model.forGUI.allowChangeNbAssociations.contains(relName),
+          canDelete: model.forGUI.allowChangeNbAssociations &&
+            model.forGUI.allowChangeNbAssociations.contains(relName)
         };
       });
     } else {
