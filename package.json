@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-mirage-nested",
-  "version": "1.0.12",
+  "version": "1.1.0",
   "description": "The default blueprint for ember-cli addons.",
   "directories": {
     "doc": "doc",
@@ -18,6 +18,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "babel-eslint": "^8.2.1",
+    "ember-cli-eslint": "^4.2.1",
     "broccoli-asset-rev": "^2.4.2",
     "ember-ajax": "^2.0.1",
     "ember-bootstrap": "0.11.3",
@@ -30,7 +32,6 @@
     "ember-cli-htmlbars": "^1.0.3",
     "ember-cli-htmlbars-inline-precompile": "^0.3.1",
     "ember-cli-inject-live-reload": "^1.4.0",
-    "ember-cli-jshint": "^1.0.0",
     "ember-cli-less": "1.5.3",
     "ember-cli-qunit": "^2.0.0",
     "ember-cli-release": "^0.2.9",
@@ -44,14 +45,14 @@
     "ember-load-initializers": "^0.5.1",
     "ember-resolver": "^2.0.3",
     "ember-route-action-helper": "^2.0.0",
-    "loader.js": "^4.0.1"
+    "loader.js": "^4.0.1",
+    "ember-cli-mirage": "0.3.4"
   },
   "keywords": [
     "ember-addon"
   ],
   "dependencies": {
-    "ember-cli-babel": "^5.1.6",
-    "ember-cli-mirage": "0.3.4"
+    "ember-cli-babel": "^5.1.6"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"

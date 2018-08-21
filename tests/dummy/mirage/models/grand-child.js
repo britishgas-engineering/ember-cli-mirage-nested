@@ -1,6 +1,6 @@
-import Model from 'ember-cli-mirage-nested/mirage/bg-model';
+import BgModel from './bg-model';
 import { belongsTo } from 'ember-cli-mirage';
 
-export default Model.extend({
+export default BgModel.extend({
   parent: belongsTo('child')
 });
