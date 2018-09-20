@@ -1,4 +1,4 @@
-import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
+import { toCollectionName, toInternalCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import assert from 'ember-cli-mirage/assert';
 import { pluralize, singularize } from 'ember-cli-mirage/utils/inflector';
 
@@ -35,25 +35,35 @@ export default {
     });
   },
 
+  toCollectionName() {
+    //ember-cli-mirage < 0.4.2 doesnt have toInternalCollectionName
+    return toInternalCollectionName || toCollectionName;
+  },
+
+  fetchSchema() {
+    //ember-cli-mirage < 0.4.2 uses _schema
+    return this._schema || this.schema;
+  },
+
   destroy() {
     this._beforeDestroy();
-    let collection = toCollectionName(this.modelName);
-    this._schema.db[collection].remove(this.attrs.id);
+    let collection = this.toCollectionName()(this.modelName);
+    this.fetchSchema().db[collection].remove(this.attrs.id);
   },
 
   // added call to 'default'
   save() {
-    let collection = toCollectionName(this.modelName);
+    let collection = this.toCollectionName()(this.modelName);
     if (this.isNew()) {
       // Update the attrs with the db response
-      this.attrs = this._schema.db[collection].insert(this.attrs);
+      this.attrs = this.fetchSchema().db[collection].insert(this.attrs);
 
       // Ensure the id getter/setter is set
       this._definePlainAttribute('id');
       this.default();
 
     } else {
-      this._schema.db[collection].update(this.attrs.id, this.attrs);
+      this.fetchSchema().db[collection].update(this.attrs.id, this.attrs);
     }
 
     // Update associated children
