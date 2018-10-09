@@ -11,7 +11,7 @@
     "start": "ember server",
     "test": "ember try:each"
   },
-  "repository": "",
+  "repository": "github:britishgas-engineering/ember-cli-mirage-nested",
   "engines": {
     "node": ">= 0.10.0"
   },
