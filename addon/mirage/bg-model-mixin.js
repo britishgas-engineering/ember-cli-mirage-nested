@@ -1,6 +1,7 @@
-import { toCollectionName, toInternalCollectionName } from 'ember-cli-mirage/utils/normalize-name';
+import { camelize } from '@ember/string';
 import assert from 'ember-cli-mirage/assert';
 import { pluralize, singularize } from 'ember-cli-mirage/utils/inflector';
+// import { toCollectionName, toInternalCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 
 export default {
   // the associations in this list will be destroyed in beforeDestroy
@@ -37,7 +38,8 @@ export default {
 
   toCollectionName() {
     //ember-cli-mirage < 0.4.2 doesnt have toInternalCollectionName
-    return toInternalCollectionName || toCollectionName;
+    const fetchSchema = this.fetchSchema();
+    return fetchSchema.toInternalCollectionName || fetchSchema.toCollectionName;
   },
 
   fetchSchema() {
@@ -119,7 +121,7 @@ export default {
     }
     for (let i = initialNumber; i < nb; i++) {
       let hash = attrs || {};
-      hash[`${inverseRelName.camelize()}Id`] = this.id;
+      hash[`${camelize(inverseRelName)}Id`] = this.id;
       rels.push(server.create(modelName, hash));
     }
     for (let i = nb; i < initialNumber; i++) {
@@ -169,7 +171,7 @@ export default {
       let inverseRelName = assoc.opts.inverse || this.modelName;
       // let inverseRelNameKey = assoc.getForeignKey();
       let hash = {};
-      hash[`${inverseRelName.camelize()}Id`] = this.id;
+      hash[`${camelize(inverseRelName)}Id`] = this.id;
       rel = server.create(modelName, hash);
       this[relNames] = [rel];
       this.save();
@@ -188,7 +190,7 @@ export default {
       let {modelName} = assoc;
       let inverseRelName = assoc.opts.inverse || this.modelName;
       let hash = {};
-      hash[`${inverseRelName.camelize()}Id`] = this.id;
+      hash[`${camelize(inverseRelName)}Id`] = this.id;
       rel = server.create(modelName, hash);
       this.update(`${relName}Id`, rel.id);
     }
@@ -246,7 +248,7 @@ export default {
     let {modelName} = assoc;
     let inverseRelName = assoc.opts.inverse || this.modelName;
     let hash = {};
-    hash[`${inverseRelName.camelize()}Id`] = this.id;
+    hash[`${camelize(inverseRelName)}Id`] = this.id;
     let model = server.create(modelName, hash);
     rels.push(model);
     this[relNames] = rels;

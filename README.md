@@ -3,6 +3,17 @@
 This addon does two different things at the moment and will be soon split into **ember-cli-mirage-scenario-chaining** and **ember-cli-mirage-gui**
 
 
+Compatibility
+------------------------------------------------------------------------------
+
+* Ember.js v3.20 or above
+* Ember CLI v3.20 or above
+* Node.js v12 or above
+
+
+Installation
+------------------------------------------------------------------------------
+
 # Demo
 
 https://britishgas-engineering.github.io/ember-cli-mirage-nested
