@@ -42,9 +42,9 @@ export default Component.extend({
           collapseName: relName,
           canAdd: (hasMany || !rel) &&
             model.forGUI.allowChangeNbAssociations &&
-            model.forGUI.allowChangeNbAssociations.contains(relName),
+            model.forGUI.allowChangeNbAssociations.includes(relName),
           canDelete: model.forGUI.allowChangeNbAssociations &&
-            model.forGUI.allowChangeNbAssociations.contains(relName)
+            model.forGUI.allowChangeNbAssociations.includes(relName)
         };
       });
     } else {

@@ -1,23 +1,27 @@
-/*jshint node:true*/
-/* global require, module */
-var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
+'use strict';
+
+const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
 module.exports = function(defaults) {
 
-  var exclude = [],
-    options = {};
+  var exclude = [];
 
   if (process.env.EMBER_ENV === 'production') {
    // exclude.push(defaults.project.pkg.name + '/routes/dev-only/mirage-seed-data/**/*');
    exclude.push(defaults.project.pkg.name + '/mirage/**/*');
   }
-
-  options.funnel = {
-   enabled: true,
-   exclude: exclude
-  }
   
-  var app = new EmberAddon(defaults, options);
+  var app = new EmberAddon(defaults, {
+    funnel: {
+      exclude,
+      enabled: true,
+    },
+    'ember-bootstrap': {
+      bootstrapVersion: 3,
+      importBootstrapCSS: false,
+      importBootstrapFont: true
+    }
+  });
 
   /*
     This build file specifies the options for the dummy test app of this
