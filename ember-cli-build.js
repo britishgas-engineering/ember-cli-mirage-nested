@@ -6,10 +6,10 @@ module.exports = function (defaults) {
   var exclude = [];
 
   if (process.env.EMBER_ENV === 'production') {
-   // exclude.push(defaults.project.pkg.name + '/routes/dev-only/mirage-seed-data/**/*');
-   exclude.push(defaults.project.pkg.name + '/mirage/**/*');
+    // exclude.push(defaults.project.pkg.name + '/routes/dev-only/mirage-seed-data/**/*');
+    exclude.push(defaults.project.pkg.name + '/mirage/**/*');
   }
-  
+
   let app = new EmberAddon(defaults, {
     funnel: {
       exclude,
@@ -18,8 +18,8 @@ module.exports = function (defaults) {
     'ember-bootstrap': {
       bootstrapVersion: 3,
       importBootstrapCSS: false,
-      importBootstrapFont: true
-    }
+      importBootstrapFont: true,
+    },
   });
   /*
     This build file specifies the options for the dummy test app of this

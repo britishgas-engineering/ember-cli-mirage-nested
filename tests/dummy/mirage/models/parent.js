@@ -6,5 +6,5 @@ export default BgModel.extend({
   forGUI: {
     allowChangeNbAssociations: ['children'],
   },
-  children: hasMany('child', {inverse: 'parent'})
+  children: hasMany('child', { inverse: 'parent' }),
 });
