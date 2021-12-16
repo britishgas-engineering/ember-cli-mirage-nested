@@ -18,21 +18,12 @@ export default class DebugEmberModelPropertyComponent extends Component {
   }
 
   get result() {
-    let val = this.dynamicPropertyVal;
-    if (!val) {
-      return val;
-    }
-    if (val.then) {
-      if (val.isFulfilled) {
-        return true;
-      } else if (val.isRejected) {
-        return false;
-      } else {
-        return 'loading..';
-      }
-    } else {
-      return val;
-    }
+    const value = this.dynamicPropertyVal;
+
+    return {
+      value,
+      class: value ? 'text-success' : 'text-danger',
+    };
   }
 
   get reason() {
