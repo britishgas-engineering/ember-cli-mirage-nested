@@ -1,5 +1,7 @@
-import Ember from 'ember';
-const { computed, Component } = Ember;
+import { alias } from '@ember/object/computed';
+import { copy } from '@ember/object/internals';
+import EmberObject, { computed } from '@ember/object';
+import Component from '@ember/component';
 import { decamelize } from '@ember/string';
 
 export default Component.extend({
@@ -14,11 +16,11 @@ export default Component.extend({
       propertyName = this.propertyName;
     return !model
       ? 'loading..'
-      : Ember.Object.extend({
-          value: computed.alias(`model.${propertyName}`),
+      : EmberObject.extend({
+          value: alias(`model.${propertyName}`),
         }).create({ model });
   }),
-  dynamicPropertyVal: computed.alias('propertyVal.value'),
+  dynamicPropertyVal: alias('propertyVal.value'),
   result: computed('dynamicPropertyVal.{isFulfilled,isRejected}', function () {
     let val = this.dynamicPropertyVal;
     if (!val) {
@@ -44,7 +46,7 @@ export default Component.extend({
     if (val.isFulfilled) {
       return {};
     } else {
-      let hash = Ember.copy(val.reason, true);
+      let hash = copy(val.reason, true);
       hash = (!hash || hash.length) ? hash : [hash];// eslint-disable-line
       return hash
         ? hash.map((reas) => {
