@@ -1,10 +1,12 @@
-import Ember from 'ember';
-const { computed, on, Component } = Ember;
+import { readOnly } from '@ember/object/computed';
+import EmberObject, { computed } from '@ember/object';
+import { on } from '@ember/object/evented';
+import Component from '@ember/component';
 
 export default Component.extend({
   initializeCollapsed: on('init', function () {
     // otherwise it would be shared between different components
-    this.set('collapsed', Ember.Object.create({}));
+    this.set('collapsed', EmberObject.create({}));
     let model = this.model;
     model.childrenAssociations.forEach((relName) => {
       let rel = model[relName],
@@ -18,12 +20,12 @@ export default Component.extend({
   model: null,
   parentModel: null,
   relName: null,
-  collapsed: Ember.Object.create({}),
+  collapsed: EmberObject.create({}),
   level: 0,
   levelNew: computed('level', function () {
     return this.level + 1;
   }),
-  flags: computed.readOnly('model.forGUI.flags'),
+  flags: readOnly('model.forGUI.flags'),
   error: null,
   childrenAssociations: computed('model.childrenAssociations', function () {
     let model = this.model;
@@ -62,7 +64,7 @@ export default Component.extend({
     addRelationship(relName) {
       // console.log('addRelationship', relName, this.get('model'));
       this.model.addRelationship(relName);
-      this.propertyDidChange('childrenAssociations');
+      this.notifyPropertyChange('childrenAssociations');
       this.send('refreshRoute');
       return false;
     },
@@ -73,7 +75,7 @@ export default Component.extend({
       return false;
     },
     associationsHaveChanged(propagate) {
-      this.propertyDidChange('childrenAssociations');
+      this.notifyPropertyChange('childrenAssociations');
       if (propagate) {
         this.attrs.parentAssociationsHaveChanged();
       } else {
@@ -91,7 +93,7 @@ export default Component.extend({
       } catch (err) {
         this.send('sendError', err);
       }
-      this.propertyDidChange('childrenAssociations');
+      this.notifyPropertyChange('childrenAssociations');
       this.attrs.parentAssociationsHaveChanged(true); //when changing servicesProductHolding hasProduct for example
       this.send('refreshRoute');
     },

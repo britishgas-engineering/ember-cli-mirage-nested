@@ -1,7 +1,8 @@
-import Ember from 'ember';
+import { helper as buildHelper } from '@ember/component/helper';
+import { isEqual } from '@ember/utils';
 
 export function eq(params /*, hash*/) {
-  return Ember.isEqual(params[0], params[1]);
+  return isEqual(params[0], params[1]);
 }
 
-export default Ember.Helper.helper(eq);
+export default buildHelper(eq);

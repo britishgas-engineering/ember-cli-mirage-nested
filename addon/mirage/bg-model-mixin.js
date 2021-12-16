@@ -1,7 +1,6 @@
 import { camelize } from '@ember/string';
 import assert from 'ember-cli-mirage/assert';
 import { pluralize, singularize } from 'ember-cli-mirage/utils/inflector';
-// import { toCollectionName, toInternalCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 
 export default {
   // the associations in this list will be destroyed in beforeDestroy
