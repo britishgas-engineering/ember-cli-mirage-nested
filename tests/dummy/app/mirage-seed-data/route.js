@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
-  // notifier: Ember.inject.service(),
+  store: Ember.inject.service(),
   model() {
     return this.store.findAll('parent').then((parents) => {
       return {

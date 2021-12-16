@@ -1,0 +1,23 @@
+<div class="row">
+  <div class="col-xs-2 col-xs-offset-2">
+    {{modelName}}
+  </div>
+  <div class="col-xs-4">
+    {{propertyNameDisplay}}
+    ?
+  </div>
+  <div class="col-xs-2">
+    <div class="text-center {{result}}">
+      {{result}}
+    </div>
+  </div>
+</div>
+{{#unless result}}
+  {{#each reason as |lineReason|}}
+    <div class="row">
+      <div class="col-xs-12 text-center red">
+        {{lineReason}}
+      </div>
+    </div>
+  {{/each}}
+{{/unless}}

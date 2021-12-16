@@ -1,0 +1,15 @@
+<div class="row red text-center">
+  {{error.message}}
+</div>
+<div class="row">
+  <div class="col-sm-12 text-center">
+    {{#bg-button
+      type="submit"
+      theme="secondary"
+      action=(action "close")
+      class="mt4"
+    }}
+      Close
+    {{/bg-button}}
+  </div>
+</div>

@@ -1,0 +1,112 @@
+<div class="fixed-width italic">
+  {{model.modelName}}
+</div>
+{{#each flags as |flag index|}}
+  {{#mirage-seed-data/with-item
+    object=model
+    key=flag.name
+    classNames=(if index "fixed-width" "fixed-width") as |current|
+  }}
+    <span class="underline">
+      {{#if flag.displayName}}
+        {{flag.displayName}}:&nbsp;
+      {{else}}
+        {{flag.name}}:&nbsp;
+      {{/if}}
+    </span>
+    {{#if flag.options.length}}
+      {{#bs-dropdown class="dropdown fixed-width"}}
+        {{#bs-dropdown/toggle class="btn btn-primary dropdown-toggle btn-sm"}}
+          {{current}}<span class="caret"></span>
+        {{/bs-dropdown/toggle}}
+        {{#bs-dropdown/menu}}
+          {{#each flag.options as |option|}}
+            <li>
+              <a
+                href="#"
+                {{action (action "changeFlag" flag option) on="click"}}
+              >
+                {{option}}
+              </a>
+            </li>
+          {{/each}}
+        {{/bs-dropdown/menu}}
+      {{/bs-dropdown}}
+    {{else}}
+      {{current}}
+    {{/if}}
+  {{/mirage-seed-data/with-item}}
+{{/each}}
+{{#if parentModel}}
+  <div class="fixed-width small">
+    <button
+      class="btn btn-sm btn-secondary"
+      {{action
+        (action "deleteRelationship" relName model parentModel)
+        on="click"
+      }}
+    >
+      -
+    </button>
+  </div>
+{{/if}}
+<div class="indent">
+  <ul>
+    {{#each childrenAssociations as |rel|}}
+      <li>
+        <div class="fixed-width small left">
+          <button
+            class="btn btn-sm btn-secondary
+              {{if
+                (get collapsed rel.collapseName)
+                "collapse-show"
+                "collapse-hide"
+              }}"
+            {{action (action "toggleCollapse" rel.collapseName) on="click"}}
+          >
+            {{if (get collapsed rel.collapseName) "Show" "Hide"}}
+          </button>
+        </div>
+        <div class="fixed-width">
+          {{rel.name}}
+        </div>
+        <div class="fixed-width small">
+          {{rel.count}}
+        </div>
+        <div class="fixed-width small">
+          {{#if rel.canAdd}}
+            <button
+              class="btn btn-sm btn-secondary {{if rel.canAdd "" "disabled"}}"
+              {{action (action "addRelationship" rel.name) on="click"}}
+            >
+              +
+            </button>
+          {{else}}
+
+          {{/if}}
+        </div>
+        {{#unless (get collapsed rel.collapseName)}}
+          {{#each rel.models as |model2|}}
+            {{#if model2}}
+              <div class="indent">
+                {{mirage-seed-data/debug-model
+                  parentModel=(and rel.canDelete model)
+                  relName=rel.name
+                  model=model2
+                  level=levelNew
+                  parentAssociationsHaveChanged=(action
+                    "associationsHaveChanged"
+                  )
+                  refreshRoute=(action "refreshRoute")
+                  sendError=(action "sendError")
+                }}
+              </div>
+            {{/if}}
+          {{/each}}
+        {{else}}
+          <br />
+        {{/unless}}
+      </li>
+    {{/each}}
+  </ul>
+</div>

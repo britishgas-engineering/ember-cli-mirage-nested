@@ -1,24 +1,26 @@
-/*jshint node:true*/
-/* global require, module */
-var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
+'use strict';
 
-module.exports = function(defaults) {
+const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
-  var exclude = [],
-    options = {};
+module.exports = function (defaults) {
+  var exclude = [];
 
   if (process.env.EMBER_ENV === 'production') {
    // exclude.push(defaults.project.pkg.name + '/routes/dev-only/mirage-seed-data/**/*');
    exclude.push(defaults.project.pkg.name + '/mirage/**/*');
   }
-
-  options.funnel = {
-   enabled: true,
-   exclude: exclude
-  }
   
-  var app = new EmberAddon(defaults, options);
-
+  let app = new EmberAddon(defaults, {
+    funnel: {
+      exclude,
+      enabled: true,
+    },
+    'ember-bootstrap': {
+      bootstrapVersion: 3,
+      importBootstrapCSS: false,
+      importBootstrapFont: true
+    }
+  });
   /*
     This build file specifies the options for the dummy test app of this
     addon, located in `/tests/dummy`
@@ -26,6 +28,12 @@ module.exports = function(defaults) {
     behave. You most likely want to be modifying `./index.js` or app's build file
   */
 
-  return app.toTree();
-
+  const { maybeEmbroider } = require('@embroider/test-setup');
+  return maybeEmbroider(app, {
+    skipBabel: [
+      {
+        package: 'qunit',
+      },
+    ],
+  });
 };

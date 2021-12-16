@@ -1,11 +1,12 @@
 import Ember from 'ember';
 const {computed, Component} = Ember;
+import { decamelize } from '@ember/string';
 
 export default Component.extend({
   model: null,
   propertyName: null,
   propertyNameDisplay: computed('propertyName', function () {
-    return this.get('propertyName').decamelize().split('_').join(' ');
+    return decamelize(this.get('propertyName')).split('_').join(' ');
   }),
   propertyVal: computed('model', 'propertyName', function () {
     // https://spin.atomicobject.com/2015/08/03/ember-computed-properties/
