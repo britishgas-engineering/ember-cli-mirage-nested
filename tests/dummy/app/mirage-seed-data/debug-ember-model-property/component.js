@@ -1,27 +1,23 @@
-import { alias } from '@ember/object/computed';
-import { copy } from '@ember/object/internals';
-import EmberObject, { computed } from '@ember/object';
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { decamelize } from '@ember/string';
+import { copy } from 'ember-copy';
 
-export default Component.extend({
-  model: null,
-  propertyName: null,
-  propertyNameDisplay: computed('propertyName', function () {
-    return decamelize(this.propertyName).split('_').join(' ');
-  }),
-  propertyVal: computed('model', 'propertyName', function () {
-    // https://spin.atomicobject.com/2015/08/03/ember-computed-properties/
-    let model = this.model,
-      propertyName = this.propertyName;
-    return !model
-      ? 'loading..'
-      : EmberObject.extend({
-          value: alias(`model.${propertyName}`),
-        }).create({ model });
-  }),
-  dynamicPropertyVal: alias('propertyVal.value'),
-  result: computed('dynamicPropertyVal.{isFulfilled,isRejected}', function () {
+export default class DebugEmberModelPropertyComponent extends Component {
+  get propertyNameDisplay() {
+    return decamelize(this.args.propertyName).split('_').join(' ');
+  }
+
+  get propertyVal() {
+    const model = this.args.model,
+      propertyName = this.args.propertyName;
+    return !model ? 'loading..' : { value: model.get(propertyName) };
+  }
+
+  get dynamicPropertyVal() {
+    return this.propertyVal.value;
+  }
+
+  get result() {
     let val = this.dynamicPropertyVal;
     if (!val) {
       return val;
@@ -37,8 +33,9 @@ export default Component.extend({
     } else {
       return val;
     }
-  }),
-  reason: computed('dynamicPropertyVal.{isFulfilled,reason}', function () {
+  }
+
+  get reason() {
     let val = this.dynamicPropertyVal;
     if (!val) {
       return val;
@@ -54,13 +51,11 @@ export default Component.extend({
           })
         : null;
     }
-  }),
-  modelName: computed('model', function () {
-    let model = this.model;
-    if (model) {
-      return model.constructor.modelName;
-    } else {
-      return '';
-    }
-  }),
-});
+  }
+
+  get modelName() {
+    const model = this.args.model;
+
+    return model ? model.constructor.modelName : '';
+  }
+}

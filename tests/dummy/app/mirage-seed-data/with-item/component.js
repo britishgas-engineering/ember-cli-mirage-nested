@@ -1,20 +1,14 @@
-import { next } from '@ember/runloop';
-import { computed } from '@ember/object';
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-  object: {},
-  key: null,
-  item: computed('object', 'key', function () {
-    // console.log('item', this.get('object'), this.get('key'), this.get('object')[this.get('key')]);
-    next(this, () => {
-      this.notifyPropertyChange('item');
-    }); //https://github.com/emberjs/ember.js/issues/11880
-    let object = this.object,
-      keys = this.key.split('.');
+export default class WithItemComponent extends Component {
+  get item() {
+    let object = this.args.object ?? {};
+    const keys = this.args.key.split('.');
+
     keys.forEach((key) => {
       object = object[key];
     });
+
     return object;
-  }),
-});
+  }
+}

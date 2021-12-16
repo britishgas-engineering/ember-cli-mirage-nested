@@ -1,19 +1,19 @@
 <div class="row">
   <div class="col-xs-2 col-xs-offset-2">
-    {{modelName}}
+    {{this.modelName}}
   </div>
   <div class="col-xs-4">
-    {{propertyNameDisplay}}
+    {{this.propertyNameDisplay}}
     ?
   </div>
   <div class="col-xs-2">
-    <div class="text-center {{result}}">
-      {{result}}
+    <div class="text-center {{this.result}}">
+      {{this.result}}
     </div>
   </div>
 </div>
-{{#unless result}}
-  {{#each reason as |lineReason|}}
+{{#unless this.result}}
+  {{#each this.reason as |lineReason|}}
     <div class="row">
       <div class="col-xs-12 text-center red">
         {{lineReason}}

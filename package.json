@@ -53,6 +53,7 @@
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
     "ember-component-css": "0.6.9",
+    "ember-copy": "^2.0.1",
     "ember-data": "^3.28.6",
     "ember-export-application-global": "^2.0.1",
     "ember-inflector": "^1.9.2",
