@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const {Component} = Ember;
+const { Component } = Ember;
 
 export default Component.extend({
   actions: {
@@ -9,6 +9,6 @@ export default Component.extend({
       } else {
         return false;
       }
-    }
-  }
+    },
+  },
 });

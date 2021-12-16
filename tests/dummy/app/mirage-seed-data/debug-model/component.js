@@ -1,17 +1,17 @@
 import Ember from 'ember';
-const {computed, on, Component} = Ember;
+const { computed, on, Component } = Ember;
 
 export default Component.extend({
   initializeCollapsed: on('init', function () {
     // otherwise it would be shared between different components
     this.set('collapsed', Ember.Object.create({}));
-    let model = this.get('model');
+    let model = this.model;
     model.childrenAssociations.forEach((relName) => {
       let rel = model[relName],
         belongsTo = !rel || !rel.models,
         model2 = belongsTo ? rel : rel.models[0];
       if (model2 && model2.collapse) {
-        this.get('collapsed').set(relName, true);
+        this.collapsed.set(relName, true);
       }
     });
   }),
@@ -21,12 +21,12 @@ export default Component.extend({
   collapsed: Ember.Object.create({}),
   level: 0,
   levelNew: computed('level', function () {
-    return this.get('level') + 1;
+    return this.level + 1;
   }),
   flags: computed.readOnly('model.forGUI.flags'),
   error: null,
   childrenAssociations: computed('model.childrenAssociations', function () {
-    let model = this.get('model');
+    let model = this.model;
     if (model) {
       return model.childrenAssociations.map((relName) => {
         let rel = model[relName],
@@ -40,11 +40,13 @@ export default Component.extend({
             return relName + rel.id;
           })*/
           collapseName: relName,
-          canAdd: (hasMany || !rel) &&
+          canAdd:
+            (hasMany || !rel) &&
             model.forGUI.allowChangeNbAssociations &&
             model.forGUI.allowChangeNbAssociations.includes(relName),
-          canDelete: model.forGUI.allowChangeNbAssociations &&
-            model.forGUI.allowChangeNbAssociations.includes(relName)
+          canDelete:
+            model.forGUI.allowChangeNbAssociations &&
+            model.forGUI.allowChangeNbAssociations.includes(relName),
         };
       });
     } else {
@@ -53,13 +55,13 @@ export default Component.extend({
   }),
   actions: {
     toggleCollapse(relName) {
-      let collapsed = this.get('collapsed');
+      let collapsed = this.collapsed;
       collapsed.toggleProperty(relName);
-      return true;//for double click
+      return true; //for double click
     },
     addRelationship(relName) {
       // console.log('addRelationship', relName, this.get('model'));
-      this.get('model').addRelationship(relName);
+      this.model.addRelationship(relName);
       this.propertyDidChange('childrenAssociations');
       this.send('refreshRoute');
       return false;
@@ -79,7 +81,7 @@ export default Component.extend({
       }
     },
     changeFlag(flag, option) {
-      let model = this.get('model');
+      let model = this.model;
       try {
         if (model[flag.method]) {
           model[flag.method](option);
@@ -98,6 +100,6 @@ export default Component.extend({
     },
     sendError(err) {
       return this.attrs.sendError(err);
-    }
-  }
+    },
+  },
 });

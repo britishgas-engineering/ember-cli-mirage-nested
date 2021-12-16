@@ -63,7 +63,6 @@ export default {
       // Ensure the id getter/setter is set
       this._definePlainAttribute('id');
       this.default();
-
     } else {
       this.fetchSchema().db[collection].update(this.attrs.id, this.attrs);
     }
@@ -76,9 +75,9 @@ export default {
 
   hasNo(relName) {
     relName = singularize(relName);
-    return this.typeOf(relName) === 'hasMany' ?
-    this.hasNoOfMany(relName) :
-    this.hasNoOfOne(relName);
+    return this.typeOf(relName) === 'hasMany'
+      ? this.hasNoOfMany(relName)
+      : this.hasNoOfOne(relName);
   },
   hasNoOfOne(relName) {
     relName = singularize(relName);
@@ -112,7 +111,7 @@ export default {
       initialNumber = rels.length;
     // let rel = this[`create${relName.capitalize()}`]();
     let assoc = this.hasManyAssociations[relNames];
-    let {modelName} = assoc;
+    let { modelName } = assoc;
     let inverseRelName = assoc.opts.inverse || this.modelName;
     if (attrs) {
       for (let i = 0; i < initialNumber; i++) {
@@ -134,11 +133,13 @@ export default {
     return this[relNames].models;
   },
 
-  hasOne(relName, attrs) { // exactly one
+  hasOne(relName, attrs) {
+    // exactly one
     relName = singularize(relName);
-    let model = this.typeOf(relName) === 'hasMany' ?
-    this.hasOneOfMany(relName) :
-    this.hasOneOfOne(relName);
+    let model =
+      this.typeOf(relName) === 'hasMany'
+        ? this.hasOneOfMany(relName)
+        : this.hasOneOfOne(relName);
     if (attrs) {
       return model.updateAttrs(attrs);
     } else {
@@ -155,7 +156,7 @@ export default {
     // TODO: create a general deleteXX method for hasMany
     let rels = this[relNames].models;
     let rel;
-    let {length} = rels;
+    let { length } = rels;
     if (length) {
       rel = rels[0];
       if (length > 1) {
@@ -167,7 +168,7 @@ export default {
       }*/
     } else {
       let assoc = this.hasManyAssociations[relNames];
-      let {modelName} = assoc;
+      let { modelName } = assoc;
       let inverseRelName = assoc.opts.inverse || this.modelName;
       // let inverseRelNameKey = assoc.getForeignKey();
       let hash = {};
@@ -187,7 +188,7 @@ export default {
     let rel = this[relName];
     if (!rel) {
       let assoc = this.belongsToAssociations[relName];
-      let {modelName} = assoc;
+      let { modelName } = assoc;
       let inverseRelName = assoc.opts.inverse || this.modelName;
       let hash = {};
       hash[`${camelize(inverseRelName)}Id`] = this.id;
@@ -199,9 +200,10 @@ export default {
 
   addRelationship(relName, attrs) {
     relName = singularize(relName);
-    let model = this.typeOf(relName) === 'hasMany' ?
-    this.addRelationshipOfMany(relName) :
-    this.addRelationshipOfOne(relName);
+    let model =
+      this.typeOf(relName) === 'hasMany'
+        ? this.addRelationshipOfMany(relName)
+        : this.addRelationshipOfOne(relName);
     if (attrs) {
       return model.updateAttrs(attrs);
     } else {
@@ -210,9 +212,9 @@ export default {
   },
   deleteRelationship(relName) {
     relName = singularize(relName);
-    return this.typeOf(relName) === 'hasMany' ?
-    this.deleteRelationshipOfMany(relName) :
-    this.deleteRelationshipOfOne(relName);
+    return this.typeOf(relName) === 'hasMany'
+      ? this.deleteRelationshipOfMany(relName)
+      : this.deleteRelationshipOfOne(relName);
   },
   addRelationshipOfOne(relName) {
     relName = singularize(relName);
@@ -245,7 +247,7 @@ export default {
     let relNames = pluralize(relName);
     let rels = this[relNames].models;
     let assoc = this.hasManyAssociations[relNames];
-    let {modelName} = assoc;
+    let { modelName } = assoc;
     let inverseRelName = assoc.opts.inverse || this.modelName;
     let hash = {};
     hash[`${camelize(inverseRelName)}Id`] = this.id;
@@ -259,7 +261,7 @@ export default {
     relName = singularize(relName);
     let relNames = pluralize(relName);
     let rels = this[relNames].models;
-    model = model || rels[rels.length-1];
+    model = model || rels[rels.length - 1];
     rels.removeObject(model);
     //model.destroy();
     this[relNames] = rels;
@@ -271,7 +273,7 @@ export default {
     hash.flags = this.forGUI.flags.map((flag) => {
       return {
         name: flag.name,
-        value: this[flag.name]
+        value: this[flag.name],
       };
     });
     hash.associations = this.childrenAssociations.map((relName) => {
@@ -280,14 +282,20 @@ export default {
       return {
         name: relName,
         count: belongsTo ? (rel ? 1 : 0) : rel.models.length,//eslint-disable-line
-        models: belongsTo ? (rel ? [rel.snapshot()] : []) : rel.models.map((model) => {return model.snapshot();})
+        models: belongsTo
+          ? rel
+            ? [rel.snapshot()]
+            : []
+          : rel.models.map((model) => {
+              return model.snapshot();
+            }),
       };
     });
     return hash;
   },
   fromSnapshot(snapshot) {
     if (snapshot) {
-      snapshot.flags.forEach(({name, value}) => {
+      snapshot.flags.forEach(({ name, value }) => {
         let flag = this.forGUI.flags.findBy('name', name);
         if (flag.method) {
           this[flag.method](value);
@@ -295,22 +303,22 @@ export default {
           this.update(name, value);
         }
       }),
-      snapshot.associations.forEach(({name, count, models}) => {
-        let rels = [];
-        switch (count) {
-          case 0:
-            this.hasNo(name);
-            break;
-          case 1:
-            rels = [this.hasOne(name)];
-            break;
-          default:
-            rels = this.hasMulti(name, count);
-        }
-        rels.forEach((rel, index) => {
-          rel.fromSnapshot(models[index]);
+        snapshot.associations.forEach(({ name, count, models }) => {
+          let rels = [];
+          switch (count) {
+            case 0:
+              this.hasNo(name);
+              break;
+            case 1:
+              rels = [this.hasOne(name)];
+              break;
+            default:
+              rels = this.hasMulti(name, count);
+          }
+          rels.forEach((rel, index) => {
+            rel.fromSnapshot(models[index]);
+          });
         });
-      });
     }
   },
   //https://github.com/samselikoff/ember-cli-mirage/issues/1061
@@ -326,9 +334,11 @@ export default {
       (attrs = {})[key] = val;
     }
 
-    Object.keys(attrs).forEach(function(attr) {
-      if (!Object.keys(this.belongsToAssociations).includes(attr) &&
-        !Object.keys(this.hasManyAssociations).includes(attr)) {
+    Object.keys(attrs).forEach(function (attr) {
+      if (
+        !Object.keys(this.belongsToAssociations).includes(attr) &&
+        !Object.keys(this.hasManyAssociations).includes(attr)
+      ) {
         this._definePlainAttribute(attr);
       }
       this[attr] = attrs[attr];
@@ -337,5 +347,5 @@ export default {
     this.save();
 
     return this;
-  }
+  },
 };

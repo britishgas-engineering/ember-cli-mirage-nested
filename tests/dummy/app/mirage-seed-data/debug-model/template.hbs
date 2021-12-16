@@ -2,11 +2,7 @@
   {{model.modelName}}
 </div>
 {{#each flags as |flag index|}}
-  {{#mirage-seed-data/with-item
-    object=model
-    key=flag.name
-    classNames=(if index "fixed-width" "fixed-width") as |current|
-  }}
+  <MirageSeedData::WithItem @object={{model}} @key={{flag.name}} @classNames={{if index "fixed-width" "fixed-width"}} as |current|>
     <span class="underline">
       {{#if flag.displayName}}
         {{flag.displayName}}:&nbsp;
@@ -15,11 +11,11 @@
       {{/if}}
     </span>
     {{#if flag.options.length}}
-      {{#bs-dropdown class="dropdown fixed-width"}}
-        {{#bs-dropdown/toggle class="btn btn-primary dropdown-toggle btn-sm"}}
+      <BsDropdown class="dropdown fixed-width" as |dd|>
+        <dd.toggle class="btn btn-primary dropdown-toggle btn-sm">
           {{current}}<span class="caret"></span>
-        {{/bs-dropdown/toggle}}
-        {{#bs-dropdown/menu}}
+        </dd.toggle>
+        <dd.menu>
           {{#each flag.options as |option|}}
             <li>
               <a
@@ -30,18 +26,17 @@
               </a>
             </li>
           {{/each}}
-        {{/bs-dropdown/menu}}
-      {{/bs-dropdown}}
+        </dd.menu>
+      </BsDropdown>
     {{else}}
       {{current}}
     {{/if}}
-  {{/mirage-seed-data/with-item}}
+  </MirageSeedData::WithItem>
 {{/each}}
 {{#if parentModel}}
   <div class="fixed-width small">
     <button
-      class="btn btn-sm btn-secondary"
-      {{action
+      class="btn btn-sm btn-secondary" type="button" {{action
         (action "deleteRelationship" relName model parentModel)
         on="click"
       }}
@@ -61,8 +56,7 @@
                 (get collapsed rel.collapseName)
                 "collapse-show"
                 "collapse-hide"
-              }}"
-            {{action (action "toggleCollapse" rel.collapseName) on="click"}}
+              }}" type="button" {{action (action "toggleCollapse" rel.collapseName) on="click"}}
           >
             {{if (get collapsed rel.collapseName) "Show" "Hide"}}
           </button>
@@ -76,8 +70,7 @@
         <div class="fixed-width small">
           {{#if rel.canAdd}}
             <button
-              class="btn btn-sm btn-secondary {{if rel.canAdd "" "disabled"}}"
-              {{action (action "addRelationship" rel.name) on="click"}}
+              class="btn btn-sm btn-secondary {{if rel.canAdd "" "disabled"}}" type="button" {{action (action "addRelationship" rel.name) on="click"}}
             >
               +
             </button>
