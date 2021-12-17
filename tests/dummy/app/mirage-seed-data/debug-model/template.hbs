@@ -2,7 +2,6 @@
   <div class="fixed-width italic">
     {{@model.modelName}}
   </div>
-  children :: {{this.collapsed.children}}
   {{#each this.flags as |flag index|}}
     <MirageSeedData::WithItem @object={{@model}} @key={{flag.name}} @classNames={{if index "fixed-width" "fixed-width"}} as |current|>
       <span class="underline">
