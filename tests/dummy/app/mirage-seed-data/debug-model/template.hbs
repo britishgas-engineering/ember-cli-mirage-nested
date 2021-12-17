@@ -76,6 +76,7 @@
 
             {{/if}}
           </div>
+          {{!-- template-lint-disable simple-unless --}}
           {{#unless (get this.collapsed rel.collapseName)}}
             {{#each rel.models as |model2|}}
               {{#if model2}}
