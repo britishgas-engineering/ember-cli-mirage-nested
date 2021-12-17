@@ -1,8 +1,7 @@
-import Model from '@ember-data/model';
-import DS from 'ember-data';
+import Model, { hasMany, belongsTo, attr } from '@ember-data/model';
 
-export default Model.extend({
-  children: DS.hasMany('grand-child'),
-  parent: DS.belongsTo('parent'),
-  title: DS.attr('string'),
-});
+export default class ChildModel extends Model {
+  @hasMany('grand-child') children;
+  @belongsTo('parent') parent;
+  @attr('string') title;
+}

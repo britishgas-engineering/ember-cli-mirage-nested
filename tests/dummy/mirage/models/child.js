@@ -3,7 +3,6 @@ import { hasMany, belongsTo } from 'ember-cli-mirage';
 
 export default BgModel.extend({
   childrenAssociations: ['children'],
-  allowChangeNbAssociations: ['children'],
   children: hasMany('grand-child', { inverse: 'parent' }),
   parent: belongsTo('parent'),
   default() {
@@ -14,6 +13,7 @@ export default BgModel.extend({
     this.hasMulti('children', 2);
   },
   forGUI: {
+    allowChangeNbAssociations: ['children'],
     flags: [
       {
         name: 'title',

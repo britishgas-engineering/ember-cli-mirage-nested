@@ -1,17 +1,22 @@
 import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
+import { action } from '@ember/object';
 
-export default Route.extend({
-  store: service(),
+export default class MirageSeedDataRoute extends Route {
+  @service store;
+
   model() {
     return this.store.findAll('parent').then((parents) => {
       return {
-        mirage: server.schema.parents.all().models[0],//eslint-disable-line
+        // eslint-disable-next-line no-undef
+        mirage: server.schema.parents.all().models[0],
         ember: parents.get('firstObject'),
       };
     });
-  },
-  _writeSentence() {
+  }
+
+  #writeSentence = () => {
+    // eslint-disable-next-line no-undef
     let children = server.schema.children.all().models,
       sent = ['let parent, children, grandChildren;'];
     sent.pushObject(["parent = server.create('parent');"]);
@@ -21,16 +26,18 @@ export default Route.extend({
     sent.pushObject('children.forEach((child) => {');
     sent.pushObject('child.');
     sent.pushObject('});');
+    // eslint-disable-next-line ember/no-controller-access-in-routes
     this.controller.set('sentences', sent);
-  },
-  actions: {
-    refresh() {
-      this.store.unloadAll();
-      this._writeSentence();
-      return this.refresh();
-    },
-    sendError(error) {
-      this.controller.set('error', error);
-    },
-  },
-});
+  };
+
+  @action refreshModel() {
+    this.store.unloadAll();
+    this.#writeSentence();
+    this.refresh();
+  }
+
+  @action sendError(error) {
+    // eslint-disable-next-line ember/no-controller-access-in-routes
+    this.controller.set('error', error);
+  }
+}
