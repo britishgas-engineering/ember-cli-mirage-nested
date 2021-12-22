@@ -36,9 +36,8 @@ export default {
   },
 
   toCollectionName() {
-    //ember-cli-mirage < 0.4.2 doesnt have toInternalCollectionName
     const fetchSchema = this.fetchSchema();
-    return fetchSchema.toInternalCollectionName || fetchSchema.toCollectionName;
+    return fetchSchema.toCollectionName;
   },
 
   fetchSchema() {
