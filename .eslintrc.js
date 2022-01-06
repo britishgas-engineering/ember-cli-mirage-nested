@@ -20,6 +20,9 @@ module.exports = {
     browser: true,
   },
   rules: {},
+  globals: {
+    server: true,
+  },
   overrides: [
     // node files
     {
