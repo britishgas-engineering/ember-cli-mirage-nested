@@ -131,6 +131,41 @@ export default {
     return this[relNames].models;
   },
 
+  setOne() {
+    return this.hasOne(...arguments);
+  },
+  hasMultiThrough(relName, childRelName, childOfChildRelName) {
+    //only working on hasMany of hasMany for now
+    relName = pluralize(relName);
+    childOfChildRelName = singularize(childOfChildRelName || relName);
+    childRelName = pluralize(childRelName);
+    const arr = [];
+    assert(
+      this[childRelName].models,
+      `${childRelName} doesnt seem to be a hasMany relationship of ${this} (in hasMultiThrough(${relName}, ${childRelName}, ${childOfChildRelName}) of ${this})`
+    );
+    this[childRelName].models.forEach((child) => {
+      let childOfChildArray = [];
+      if (child[`${childOfChildRelName}s`]) {
+        childOfChildArray = child[`${childOfChildRelName}s`].models;
+      } else if (child[childOfChildRelName]) {
+        childOfChildArray = [child[childOfChildRelName]];
+      }
+      assert(
+        childOfChildArray,
+        `${childOfChildRelName} doesnt seem to be a relationship of ${child} (in hasMultiThrough(${relName}, ${childRelName}, ${childOfChildRelName}) of ${this})`
+      );
+      childOfChildArray.forEach((childOfChild) => {
+        //arr.contains not working, for some reason..
+        if (!arr.map((elt) => elt.id).includes(childOfChild.id)) {
+          arr.pushObject(childOfChild);
+        }
+      });
+    });
+    this.update(relName, arr);
+    return this[relName];
+  },
+
   hasOne(relName, attrs) {
     // exactly one
     relName = singularize(relName);
