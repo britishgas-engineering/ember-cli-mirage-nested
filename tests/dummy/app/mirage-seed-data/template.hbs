@@ -1,0 +1,101 @@
+<h3>
+  Those are your Ember models:
+</h3>
+<br />
+<MirageSeedData::DebugEmberModelProperty @model={{@model.ember}} @propertyName="children.length" />
+
+{{#each @model.ember.children as |child|}}
+  <MirageSeedData::DebugEmberModelProperty @model={{child}} @propertyName="children.length" />
+  <MirageSeedData::DebugEmberModelProperty @model={{child}} @propertyName="title" />
+{{/each}}
+<br />
+<br />
+<br />
+<h3>
+  Those are your mirage seed data, play with it:
+</h3>
+<div class="row mt10">
+  <div class="col-xs-10 col-xs-offset-1">
+    parent: 1
+    <MirageSeedData::DebugModel 
+      @level={{1}}
+      @model={{@model.mirage}}
+      @sendError={{route-action "sendError"}}
+      @refreshRoute={{route-action "refreshModel"}}
+      @parentAssociationsHaveChanged={{route-action "refreshModel"}}
+    />
+  </div>
+</div>
+{{#if this.error}}
+  {{!-- template-lint-disable no-curly-component-invocation --}}
+  {{!-- template-lint-disable no-action --}}
+  {{to-elsewhere
+    named="modal"
+    send=(hash
+      body=(component
+        "mirage-seed-data/error-modal"
+        error=this.error
+        close=(action (mut this.error) false)
+      )
+    )
+  }}
+{{/if}}
+<br />
+<br />
+<h3>
+  This is how you should write your scenario in scenarios/default:
+</h3>
+let parent, children, grandChildren, child;
+<br />
+parent = server.create('parent');
+<br />
+
+{{#with @model.mirage.children.models as |children|}}
+  {{#if children.length}}
+    {{#if (eq children.length 1)}}
+      child = parent.hasOne('children', {
+      <br />
+      title: "
+      {{children.firstObject.title}}
+      "
+      <br />
+      });
+      <br />
+      {{#each children as |child|}}
+        {{#with child.children.models as |grandChildren|}}
+          {{#if grandChildren.length}}
+            {{#if (eq grandChildren.length 1)}}
+              grandChildren = child.hasOne('children');
+            {{else}}
+              grandChildren = child.hasMulti('children',
+              {{grandChildren.length}}
+              );
+            {{/if}}
+            <br />
+          {{/if}}
+        {{/with}}
+      {{/each}}
+    {{else}}
+      children = parent.hasMulti('children',
+      {{children.length}}
+      );
+      <br />
+      {{#each children as |child index|}}
+        {{#with child.children.models as |grandChildren|}}
+          {{#if grandChildren.length}}
+            {{#if (eq grandChildren.length 1)}}
+              grandChildren = child[{{index}}].hasOne('children');
+            {{else}}
+              grandChildren = child[
+              {{index}}
+              ].hasMulti('children',
+              {{grandChildren.length}}
+              );
+            {{/if}}
+            <br />
+          {{/if}}
+        {{/with}}
+      {{/each}}
+    {{/if}}
+  {{/if}}
+{{/with}}

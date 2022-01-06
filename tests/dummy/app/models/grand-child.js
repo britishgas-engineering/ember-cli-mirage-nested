@@ -1,6 +1,5 @@
-import Model from 'ember-data/model';
-import DS from 'ember-data';
+import Model, { belongsTo } from '@ember-data/model';
 
-export default Model.extend({
-  parent: DS.belongsTo('child')
-});
+export default class GrandChildModel extends Model {
+  @belongsTo('child') parent;
+}

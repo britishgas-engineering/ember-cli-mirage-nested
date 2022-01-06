@@ -9,4 +9,4 @@ export default (server) => {
   */
 
   //server.createList('post', 10);
-}
+};
