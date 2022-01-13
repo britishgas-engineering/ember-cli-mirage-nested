@@ -20,9 +20,9 @@
     <MirageSeedData::DebugModel 
       @level={{1}}
       @model={{@model.mirage}}
-      @sendError={{route-action "sendError"}}
-      @refreshRoute={{route-action "refreshModel"}}
-      @parentAssociationsHaveChanged={{route-action "refreshModel"}}
+      @sendError={{this.sendError}}
+      @refreshRoute={{this.refreshModel}}
+      @parentAssociationsHaveChanged={{this.refreshModel}}
     />
   </div>
 </div>

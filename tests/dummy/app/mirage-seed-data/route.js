@@ -30,14 +30,9 @@ export default class MirageSeedDataRoute extends Route {
     this.controller.set('sentences', sent);
   };
 
-  @action refreshModel() {
+  @action refreshRouteModel() {
     this.store.unloadAll();
     this.#writeSentence();
     this.refresh();
-  }
-
-  @action sendError(error) {
-    // eslint-disable-next-line ember/no-controller-access-in-routes
-    this.controller.set('error', error);
   }
 }
