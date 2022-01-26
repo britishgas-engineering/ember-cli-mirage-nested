@@ -1,56 +1,52 @@
-import Ember from 'ember';
-const {computed, Component} = Ember;
+import Component from '@glimmer/component';
+import { decamelize } from '@ember/string';
+import { copy } from 'ember-copy';
 
-export default Component.extend({
-  model: null,
-  propertyName: null,
-  propertyNameDisplay: computed('propertyName', function () {
-    return this.get('propertyName').decamelize().split('_').join(' ');
-  }),
-  propertyVal: computed('model', 'propertyName', function () {
-    // https://spin.atomicobject.com/2015/08/03/ember-computed-properties/
-    let model = this.get('model'),
-      propertyName = this.get('propertyName');
-    return !model ? 'loading..' :
-    Ember.Object.extend({
-      value: computed.alias(`model.${propertyName}`)
-    }).create({model});
-  }),
-  dynamicPropertyVal: computed.alias('propertyVal.value'),
-  result: computed('dynamicPropertyVal.{isFulfilled,isRejected}', function () {
-    let val = this.get('dynamicPropertyVal');
-    if (!val) {return val;}
-    if (val.then) {
-      if (val.isFulfilled) {
-        return true;
-      } else if (val.isRejected) {
-        return false;
-      } else {
-        return 'loading..';
-      }
-    } else {
+export default class DebugEmberModelPropertyComponent extends Component {
+  get propertyNameDisplay() {
+    return decamelize(this.args.propertyName).split('_').join(' ');
+  }
+
+  get propertyVal() {
+    const model = this.args.model,
+      propertyName = this.args.propertyName;
+    return !model ? 'loading..' : { value: model.get(propertyName) };
+  }
+
+  get dynamicPropertyVal() {
+    return this.propertyVal.value;
+  }
+
+  get result() {
+    const value = this.dynamicPropertyVal;
+
+    return {
+      value,
+      class: value ? 'text-success' : 'text-danger',
+    };
+  }
+
+  get reason() {
+    let val = this.dynamicPropertyVal;
+    if (!val) {
       return val;
     }
-  }),
-  reason: computed('dynamicPropertyVal.{isFulfilled,reason}', function () {
-    let val = this.get('dynamicPropertyVal');
-    if (!val) {return val;}
     if (val.isFulfilled) {
       return {};
     } else {
-      let hash = Ember.copy(val.reason, true);
+      let hash = copy(val.reason, true);
       hash = (!hash || hash.length) ? hash : [hash];// eslint-disable-line
-      return hash ? hash.map((reas) => {
-        return JSON.stringify(reas);
-      }) : null;
+      return hash
+        ? hash.map((reas) => {
+            return JSON.stringify(reas);
+          })
+        : null;
     }
-  }),
-  modelName: computed('model', function () {
-    let model = this.get('model');
-    if (model) {
-      return model.constructor.modelName;
-    } else {
-      return '';
-    }
-  })
-});
+  }
+
+  get modelName() {
+    const model = this.args.model;
+
+    return model ? model.constructor.modelName : '';
+  }
+}

@@ -1,5 +1,3 @@
 import AppSerializer from './application';
 
-export default AppSerializer.extend({
-
-});
+export default AppSerializer.extend({});
