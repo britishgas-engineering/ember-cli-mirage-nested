@@ -4,7 +4,7 @@ import { hasMany } from 'ember-cli-mirage';
 export default BgModel.extend({
   childrenAssociations: ['children'],
   forGUI: {
-    allowChangeNbAssociations: ['children'],
+    allowChangeNbAssociations: ['children']
   },
-  children: hasMany('child', { inverse: 'parent' }),
+  children: hasMany('child', { inverse: 'parent' })
 });

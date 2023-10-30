@@ -16,8 +16,8 @@ export default RestSerializer.extend({
     let jsonApiPayload = {
       data: {
         type: pluralize(type),
-        attributes: {},
-      },
+        attributes: {}
+      }
     };
     if (attrs.id) {
       jsonApiPayload.data.id = attrs.id;
@@ -46,5 +46,5 @@ export default RestSerializer.extend({
     delete formattedAttrs.server;
 
     return formattedAttrs;
-  },
+  }
 });

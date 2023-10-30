@@ -12,7 +12,7 @@
 <br />
 <br />
 <h3>
-  Those are your mirage seed data, play with it:
+  Those are your mirage seed data, play let it:
 </h3>
 <div class="row mt10">
   <div class="col-xs-10 col-xs-offset-1">
@@ -50,19 +50,19 @@ let parent, children, grandChildren, child;
 parent = server.create('parent');
 <br />
 
-{{#with @model.mirage.children.models as |children|}}
+{{#let @model.mirage.children.models as |children|}}
   {{#if children.length}}
     {{#if (eq children.length 1)}}
       child = parent.hasOne('children', {
       <br />
       title: "
-      {{children.firstObject.title}}
+      {{get children "0.title"}}
       "
       <br />
       });
       <br />
       {{#each children as |child|}}
-        {{#with child.children.models as |grandChildren|}}
+        {{#let child.children.models as |grandChildren|}}
           {{#if grandChildren.length}}
             {{#if (eq grandChildren.length 1)}}
               grandChildren = child.hasOne('children');
@@ -73,7 +73,7 @@ parent = server.create('parent');
             {{/if}}
             <br />
           {{/if}}
-        {{/with}}
+        {{/let}}
       {{/each}}
     {{else}}
       children = parent.hasMulti('children',
@@ -81,7 +81,7 @@ parent = server.create('parent');
       );
       <br />
       {{#each children as |child index|}}
-        {{#with child.children.models as |grandChildren|}}
+        {{#let child.children.models as |grandChildren|}}
           {{#if grandChildren.length}}
             {{#if (eq grandChildren.length 1)}}
               grandChildren = child[{{index}}].hasOne('children');
@@ -94,8 +94,8 @@ parent = server.create('parent');
             {{/if}}
             <br />
           {{/if}}
-        {{/with}}
+        {{/let}}
       {{/each}}
     {{/if}}
   {{/if}}
-{{/with}}
+{{/let}}

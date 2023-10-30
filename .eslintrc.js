@@ -9,22 +9,26 @@ module.exports = {
     requireConfigFile: false,
     babelOptions: {
       plugins: [
-        ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
-      ],
-    },
+        ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }]
+      ]
+    }
   },
   plugins: ['ember'],
   extends: [
     'eslint:recommended',
     'plugin:ember/recommended',
-    'plugin:prettier/recommended',
+    'plugin:prettier/recommended'
   ],
   env: {
-    browser: true,
+    browser: true
   },
-  rules: {},
+  rules: {
+    'ember/avoid-leaking-state-in-ember-objects': 'warn',
+    'ember/use-ember-data-rfc-395-imports': 'warn',
+    'ember/no-classic-classes': 'warn'
+  },
   globals: {
-    server: true,
+    server: true
   },
   overrides: [
     // node files
@@ -39,21 +43,21 @@ module.exports = {
         './testem.js',
         './blueprints/*/index.js',
         './config/**/*.js',
-        './tests/dummy/config/**/*.js',
+        './tests/dummy/config/**/*.js'
       ],
       parserOptions: {
-        sourceType: 'script',
+        sourceType: 'script'
       },
       env: {
         browser: false,
-        node: true,
+        node: true
       },
-      extends: ['plugin:n/recommended'],
+      extends: ['plugin:n/recommended']
     },
     {
       // test files
       files: ['tests/**/*-test.{js,ts}'],
-      extends: ['plugin:qunit/recommended'],
-    },
-  ],
+      extends: ['plugin:qunit/recommended']
+    }
+  ]
 };

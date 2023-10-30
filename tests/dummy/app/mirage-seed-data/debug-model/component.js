@@ -38,7 +38,7 @@ export default class DebugModelComponent extends Component {
             model.forGUI.allowChangeNbAssociations.includes(relName),
           canDelete:
             model.forGUI.allowChangeNbAssociations &&
-            model.forGUI.allowChangeNbAssociations.includes(relName),
+            model.forGUI.allowChangeNbAssociations.includes(relName)
         };
       });
     } else {

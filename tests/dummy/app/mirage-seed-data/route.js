@@ -10,7 +10,7 @@ export default class MirageSeedDataRoute extends Route {
       return {
         // eslint-disable-next-line no-undef
         mirage: server.schema.parents.all().models[0],
-        ember: parents.get('firstObject'),
+        ember: parents.get('firstObject')
       };
     });
   }
