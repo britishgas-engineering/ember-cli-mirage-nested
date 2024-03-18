@@ -3,16 +3,14 @@
 This addon does two different things at the moment and will be soon split into **ember-cli-mirage-scenario-chaining** and **ember-cli-mirage-gui**
 
 
-Compatibility
-------------------------------------------------------------------------------
+## Compatibility
 
-* Ember.js v3.20 or above
-* Ember CLI v3.20 or above
-* Node.js v12 or above
+* Ember.js v4.4 or above
+* Ember CLI v4.4 or above
+* Node.js v14 or above
 
 
-Installation
-------------------------------------------------------------------------------
+## Installation
 
 # Demo
 
@@ -28,7 +26,7 @@ server.create('parent').hasOne('child').hasOne('grandChild');
 
 ### Features
 
-We created a few very useful methods to be used on Mirage models (once they are extended using our mixin), allowing to easily create scenarii:
+## Usage
 
 * `hasOne` : the parent model instance has one and only one child model instance (given a relationship parent to child has been set).
 example:
@@ -48,20 +46,13 @@ const children = parent.hasMulti('children', 3, {propertyThatAllTheChildrenWillH
 parent.children.models === children //true
 ```
 
-* `hasNo` : the parent model instance has no child model instance (given a relationship parent to child has been set).
-example:
-```javascript
-//mirage/scenarios/default.js
-const parent = server.create('parent');
-parent.hasNo('child');
-parent.child === null //true
-```
+## Contributing
 
 * In addition we added a `default` method available for each Mirage model, which will be run whenever a new model instance is created - similar to an `init` method, this allows to create default children relationships on model creation
 
 ### Usage
 
-Extend your Mirage models from the bg-model-mixin in this addon, for example:
+## License
 
 ```javascript
 //mirage/models/bg-model.js

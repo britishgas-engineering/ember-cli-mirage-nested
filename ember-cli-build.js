@@ -13,13 +13,13 @@ module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
     funnel: {
       exclude,
-      enabled: true,
+      enabled: true
     },
     'ember-bootstrap': {
       bootstrapVersion: 3,
       importBootstrapCSS: false,
-      importBootstrapFont: true,
-    },
+      importBootstrapFont: true
+    }
   });
   /*
     This build file specifies the options for the dummy test app of this
@@ -32,8 +32,8 @@ module.exports = function (defaults) {
   return maybeEmbroider(app, {
     skipBabel: [
       {
-        package: 'qunit',
-      },
-    ],
+        package: 'qunit'
+      }
+    ]
   });
 };

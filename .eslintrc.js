@@ -2,26 +2,33 @@
 
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 'latest',
     sourceType: 'module',
-    ecmaFeatures: {
-      legacyDecorators: true,
-    },
+    requireConfigFile: false,
+    babelOptions: {
+      plugins: [
+        ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }]
+      ]
+    }
   },
   plugins: ['ember'],
   extends: [
     'eslint:recommended',
     'plugin:ember/recommended',
-    'plugin:prettier/recommended',
+    'plugin:prettier/recommended'
   ],
   env: {
-    browser: true,
+    browser: true
   },
-  rules: {},
+  rules: {
+    'ember/avoid-leaking-state-in-ember-objects': 'warn',
+    'ember/use-ember-data-rfc-395-imports': 'warn',
+    'ember/no-classic-classes': 'warn'
+  },
   globals: {
-    server: true,
+    server: true
   },
   overrides: [
     // node files
@@ -29,28 +36,28 @@ module.exports = {
       files: [
         './.eslintrc.js',
         './.prettierrc.js',
+        './.stylelintrc.js',
         './.template-lintrc.js',
         './ember-cli-build.js',
         './index.js',
         './testem.js',
         './blueprints/*/index.js',
         './config/**/*.js',
-        './tests/dummy/config/**/*.js',
+        './tests/dummy/config/**/*.js'
       ],
       parserOptions: {
-        sourceType: 'script',
+        sourceType: 'script'
       },
       env: {
         browser: false,
-        node: true,
+        node: true
       },
-      plugins: ['node'],
-      extends: ['plugin:node/recommended'],
+      extends: ['plugin:n/recommended']
     },
     {
-      // Test files:
+      // test files
       files: ['tests/**/*-test.{js,ts}'],
-      extends: ['plugin:qunit/recommended'],
-    },
-  ],
+      extends: ['plugin:qunit/recommended']
+    }
+  ]
 };

@@ -16,7 +16,7 @@ module.exports = {
     this.addonConfig = this.app.project.config(app.env)[this.name] || {};
     this._super.included.apply(this, arguments);
   },
-  treeFor: function (name) {
+  treeFor: function () {
     if (!this._shouldIncludeFiles()) {
       return;
     }
@@ -44,5 +44,5 @@ module.exports = {
         environment !== 'production' &&
         explicitExcludeFiles !== true)
     );
-  },
+  }
 };

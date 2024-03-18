@@ -22,7 +22,7 @@ export default class DebugEmberModelPropertyComponent extends Component {
 
     return {
       value,
-      class: value ? 'text-success' : 'text-danger',
+      class: value ? 'text-success' : 'text-danger'
     };
   }
 
