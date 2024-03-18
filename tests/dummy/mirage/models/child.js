@@ -19,9 +19,9 @@ export default BgModel.extend({
         name: 'title',
         options: [
           'The title attribute of this model is set on init in the "default" hook of the model.',
-          'Also, this model has two children by default.',
-        ],
-      },
-    ],
-  },
+          'Also, this model has two children by default.'
+        ]
+      }
+    ]
+  }
 });

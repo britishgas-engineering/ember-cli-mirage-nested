@@ -10,7 +10,7 @@ export default {
     // the associations for which you can add / remove on the GUI
     allowChangeNbAssociations: [],
     // the flags to display on the GUI
-    flags: [],
+    flags: []
   },
   default() {
     // override in model to setup when instantiated
@@ -306,7 +306,7 @@ export default {
     hash.flags = this.forGUI.flags.map((flag) => {
       return {
         name: flag.name,
-        value: this[flag.name],
+        value: this[flag.name]
       };
     });
     hash.associations = this.childrenAssociations.map((relName) => {
@@ -321,7 +321,7 @@ export default {
             : []
           : rel.models.map((model) => {
               return model.snapshot();
-            }),
+            })
       };
     });
     return hash;
@@ -380,5 +380,5 @@ export default {
     this.save();
 
     return this;
-  },
+  }
 };
